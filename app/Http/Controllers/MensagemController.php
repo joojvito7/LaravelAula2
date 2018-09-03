@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mensagem;
 use Illuminate\Http\Request;
+use \Illuminate\Support\Facades\Validator;
 
 class MensagemController extends Controller
 {
@@ -90,10 +91,10 @@ class MensagemController extends Controller
      * @param  \App\Mensagem  $mensagem
      * @return \Illuminate\Http\Response
      */
-    public function edit(Mensagem $mensagem)
+    public function edit($id)
     {
-        //
-    }
+      $obj_Mensagens = Mensagem::find($id);
+        return view('mensagem.edit',['mensagem' => $obj_Mensagens]);     }
 
     /**
      * Update the specified resource in storage.
@@ -102,9 +103,42 @@ class MensagemController extends Controller
      * @param  \App\Mensagem  $mensagem
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mensagem $mensagem)
+    public function update(Request $request, $id)
     {
-        //
+        //faço as validações dos campos
+
+        //vetor com as mensagens de erro
+        $messages = array(
+            'titulo.required' => 'É obrigatório um título para a mensagem',
+            'texto.required' => 'É obrigatória um texto para a mensagem',
+            'autor.required' => 'É obrigatório o autor da mensagem',
+        );
+
+        //vetor com as especificações de validações
+        $regras = array(
+            'titulo' => 'required|string|max:255',
+            'texto' => 'required',
+            'autor' => 'required|string',
+        );
+
+        //cria o objeto com as regras de validação
+        $validador = Validator::make($request->all(), $regras, $messages);
+
+        //executa as validações
+        if ($validador->fails()) {
+            return redirect("mensagens/$id/edit")
+            ->withErrors($validador)
+            ->withInput($request->all);
+        }
+
+        //se passou pelas validações, processa e salva no banco...
+        $obj_Mensagens = Mensagem::findOrFail($id);
+        $obj_Mensagens->titulo =       $request['titulo'];
+        $obj_Mensagens->texto = $request['texto'];
+        $obj_Mensagens->autor = $request['autor'];
+        $obj_Mensagens->save();
+
+        return redirect('/mensagens')->with('success', 'Mensagem alterada com sucesso!!');
     }
 
     /**
@@ -115,6 +149,8 @@ class MensagemController extends Controller
      */
     public function destroy(Mensagem $mensagem)
     {
-        //
+      $obj_Mensagens = mensagens::findOrFail($id);
+        $obj_Mensagens->delete($id);
+        return redirect('/mensagens')->with('sucess','Mensagem excluída com Sucesso!!');
     }
 }

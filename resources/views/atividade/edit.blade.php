@@ -1,3 +1,4 @@
+
 <h1>Formulário de Edição da Atividade código {{$atividade->id}}</h1>
 <hr>
 

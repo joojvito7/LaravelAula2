@@ -1,3 +1,4 @@
+
 <h1>Excluir Registro</h1>
 <hr>
 <form action="/atividades/{{$atividade->id}}" method="POST">
