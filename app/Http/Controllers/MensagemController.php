@@ -140,17 +140,27 @@ class MensagemController extends Controller
 
         return redirect('/mensagens')->with('success', 'Mensagem alterada com sucesso!!');
     }
-
+/**
+     * Show the form for deleting the specified resource.
+     *
+     * @param  \App\Mensagem  $mensagem
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $obj_mensagem = Mensagem::find($id);
+        return view('mensagem.delete',['mensagem' => $obj_mensagem]);
+    }
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Mensagem  $mensagem
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mensagem $mensagem)
+    public function destroy($id)
     {
-      $obj_Mensagens = mensagens::findOrFail($id);
-        $obj_Mensagens->delete($id);
+        $obj_mensagem = Mensagem::findOrFail($id);
+        $obj_mensagem->delete($id);
         return redirect('/mensagens')->with('sucess','Mensagem excluída com Sucesso!!');
     }
 }
