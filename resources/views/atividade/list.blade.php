@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 <h1>Lista de Atividades</h1>
 <hr>
 
@@ -25,3 +29,4 @@
 <br>
 <p><a href="/atividades/create">Criar novo registro</a></p>
 
+@endsection
